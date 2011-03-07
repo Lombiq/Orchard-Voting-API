@@ -90,12 +90,14 @@ namespace Contrib.Voting.Services {
                             Axe = calculus.Axe,
                             ContentItemRecord = contentItem.Record,
                             ContentType = contentItem.ContentType,
-                            CreatedUtc = _clock.UtcNow,
                             FunctionName = calculus.FunctionName,
                             Value = 0,
                             Count = 0
                         };
                     }
+
+                    // either it's a new result or not, do update the CreatedUtc
+                    result.CreatedUtc = _clock.UtcNow;
 
                     currentCalculus.Execute(function, result);
                     
