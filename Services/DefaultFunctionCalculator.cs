@@ -74,7 +74,7 @@ namespace Contrib.Voting.Services {
                     var currentCalculus = _queue.Dequeue();
                     calculus.GetVotes = () => {
                         return _voteRepository
-                            .Fetch(v => v.ContentItemRecord.Id == currentCalculus.ContentId && v.Axe == currentCalculus.Axe)
+                            .Fetch(v => v.ContentItemRecord.Id == currentCalculus.ContentId && v.Dimension == currentCalculus.Dimension)
                             .ToList();
                     };
 
@@ -87,7 +87,7 @@ namespace Contrib.Voting.Services {
 
                     if (result == null) {
                         result = new ResultRecord {
-                            Axe = calculus.Axe,
+                            Dimension = calculus.Dimension,
                             ContentItemRecord = contentItem.Record,
                             ContentType = contentItem.ContentType,
                             FunctionName = calculus.FunctionName,

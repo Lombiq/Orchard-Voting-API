@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -75,23 +76,37 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\VoteWidgetPartDriver.cs" />
     <Compile Include="Events\IVotingEventHandler.cs" />
     <Compile Include="Functions\Average.cs" />
     <Compile Include="Functions\Count.cs" />
     <Compile Include="Functions\Sum.cs" />
     <Compile Include="Functions\IFunction.cs" />
+    <Compile Include="Handlers\VoteWidgetPartHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\VoteWidgetPart.cs" />
     <Compile Include="Models\ResultRecord.cs" />
     <Compile Include="Models\VoteRecord.cs" />
+    <Compile Include="Models\VoteWidgetPartRecord.cs" />
     <Compile Include="Services\Calculus.cs" />
     <Compile Include="Services\CalculusQueue.cs" />
     <Compile Include="Services\DefaultFunctionCalculator.cs" />
     <Compile Include="Services\DefaultVotingService.cs" />
     <Compile Include="Services\IFunctionCalculator.cs" />
     <Compile Include="Services\IVotingService.cs" />
+    <Compile Include="Services\PredicateBuilder.cs" />
+    <Compile Include="ViewModels\VoteWidgetViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Handlers\" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Vote.Widget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.VoteWidget.List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

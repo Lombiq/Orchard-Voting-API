@@ -7,7 +7,7 @@ namespace Contrib.Voting.Models {
         public virtual DateTime? CreatedUtc { get; set; }
         public virtual ContentItemRecord ContentItemRecord { get; set; }
         public virtual string ContentType { get; set; }
-        public virtual int Axe { get; set; }
+        public virtual string Dimension { get; set; }
 
         public virtual double Value { get; set; }
         public virtual int Count { get; set; }

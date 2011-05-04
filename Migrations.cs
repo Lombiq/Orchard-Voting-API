@@ -15,7 +15,7 @@ namespace Contrib.Voting {
                     .Column<string>("Username")
                     .Column<string>("Hostname")
                     .Column<double>("Value")
-                    .Column<int>("Axe")
+                    .Column<string>("Dimension", c => c.Nullable())
                 );
 
             SchemaBuilder.CreateTable("ResultRecord",
@@ -24,13 +24,56 @@ namespace Contrib.Voting {
                     .Column<DateTime>("CreatedUtc", column => column.Nullable())
                     .Column<int>("ContentItemRecord_id")
                     .Column<string>("ContentType")
-                    .Column<int>("Axe")
+                    .Column<string>("Dimension", c => c.Nullable())
                     .Column<double>("Value")
                     .Column<int>("Count")
                     .Column<string>("FunctionName")
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+
+            SchemaBuilder.AlterTable("ResultRecord",
+                table => table
+                    .DropColumn("Axe")
+                );
+
+            SchemaBuilder.AlterTable("ResultRecord",
+                table => table
+                    .AddColumn<string>("Dimension", c => c.Nullable())
+                );
+
+            SchemaBuilder.AlterTable("VoteRecord",
+                table => table
+                    .DropColumn("Axe")
+                );
+
+            SchemaBuilder.AlterTable("VoteRecord",
+                table => table
+                    .AddColumn<string>("Dimension", c => c.Nullable())
+                );
+
+            SchemaBuilder.CreateTable("VoteWidgetPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("ContentType")
+                    .Column<bool>("Ascending")
+                    .Column<int>("Count")
+                    .Column<string>("Dimension")
+                    .Column<string>("FunctionName")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("VoteWidget",
+                cfg => cfg
+                    .WithPart("VoteWidgetPart")
+                    .WithPart("CommonPart")
+                    .WithPart("WidgetPart")
+                    .WithSetting("Stereotype", "Widget")
+                );
+      
+            return 2;
         }
     }
 }

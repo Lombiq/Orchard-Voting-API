@@ -44,7 +44,7 @@ namespace Contrib.Voting.Services {
         public void RemoveVote(VoteRecord vote) {
 
             foreach (var function in _functions) {
-                _calculator.Calculate(new DeleteCalculus { Axe = vote.Axe, ContentId = vote.ContentItemRecord.Id, Vote = vote.Value, FunctionName = function.Name });
+                _calculator.Calculate(new DeleteCalculus { Dimension = vote.Dimension, ContentId = vote.ContentItemRecord.Id, Vote = vote.Value, FunctionName = function.Name });
             }
             
             _voteRepository.Delete(vote);
@@ -56,9 +56,9 @@ namespace Contrib.Voting.Services {
                 _voteRepository.Delete(vote);
         }
 
-        public void Vote(Orchard.ContentManagement.ContentItem contentItem, string userName, string hostname, double value, int axe = 0) {
+        public void Vote(Orchard.ContentManagement.ContentItem contentItem, string userName, string hostname, double value, string dimension = null) {
             var vote = new VoteRecord {
-                Axe = axe,
+                Dimension = dimension,
                 ContentItemRecord = contentItem.Record,
                 ContentType = contentItem.ContentType,
                 CreatedUtc = _clock.UtcNow,
@@ -70,7 +70,7 @@ namespace Contrib.Voting.Services {
             _voteRepository.Create(vote);
 
             foreach(var function in _functions) {
-                _calculator.Calculate(new CreateCalculus {Axe = axe, ContentId = contentItem.Id, FunctionName = function.Name, Vote = value});
+                _calculator.Calculate(new CreateCalculus { Dimension = dimension, ContentId = contentItem.Id, FunctionName = function.Name, Vote = value});
             }
 
             _eventHandler.Voted(vote);
@@ -80,7 +80,7 @@ namespace Contrib.Voting.Services {
             var previousValue = value;
 
             foreach (var function in _functions) {
-                _calculator.Calculate(new UpdateCalculus { Axe = vote.Axe, ContentId = vote.ContentItemRecord.Id, PreviousVote = vote.Value, Vote = value, FunctionName = function.Name });
+                _calculator.Calculate(new UpdateCalculus { Dimension = vote.Dimension, ContentId = vote.ContentItemRecord.Id, PreviousVote = vote.Value, Vote = value, FunctionName = function.Name });
             }
 
             vote.CreatedUtc = _clock.UtcNow;
@@ -89,12 +89,12 @@ namespace Contrib.Voting.Services {
             _eventHandler.VoteChanged(vote, previousValue);
         }
 
-        public IEnumerable<ResultRecord> GetResults(int contentItemId, int axe = 0, string[] functions = null) {
+        public IEnumerable<ResultRecord> GetResults(int contentItemId, string dimension = null, string[] functions = null) {
 
             foreach (var function in _functions) {
                 var functionName = function.Name;
                 yield return _resultRepository.Get(
-                    r => r.Axe == axe
+                    r => r.Dimension == dimension
                          && r.ContentItemRecord.Id == contentItemId
                          && r.FunctionName == functionName);
             }

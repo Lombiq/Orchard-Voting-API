@@ -15,7 +15,7 @@ namespace Contrib.Voting.Services {
     public abstract class Calculus {
         public string FunctionName { get; set; }
         public int ContentId { get; set; }
-        public int Axe { get; set; }
+        public string Dimension { get; set; }
         public abstract CalculationModes Mode { get; }
         public Func<IEnumerable<VoteRecord>> GetVotes { get; set; }
 
