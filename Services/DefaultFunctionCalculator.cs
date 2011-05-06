@@ -54,7 +54,8 @@ namespace Contrib.Voting.Services {
                 || calculus.Mode == CalculationModes.Update && !function.CanUpdate ) {
                     calculus = new RebuildCalculus {
                         ContentId = calculus.ContentId,
-                        FunctionName = calculus.FunctionName
+                        FunctionName = calculus.FunctionName,
+                        Dimension = calculus.Dimension
                     };
             }
 
@@ -63,7 +64,8 @@ namespace Contrib.Voting.Services {
                 if (_queue.Any(c =>
                                 c.Mode == CalculationModes.Rebuild
                                 && c.ContentId == calculus.ContentId
-                                && c.FunctionName == calculus.FunctionName)) {
+                                && c.FunctionName == calculus.FunctionName
+                                && c.Dimension == calculus.Dimension)) {
                     return;
                 }
                 _queue.Enqueue(calculus);
