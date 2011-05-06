@@ -30,7 +30,7 @@ namespace Contrib.Voting {
                     .Column<string>("FunctionName")
                 );
 
-            return 1;
+            return 2;
         }
 
         public int UpdateFrom1() {
