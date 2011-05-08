@@ -30,6 +30,24 @@ namespace Contrib.Voting {
                     .Column<string>("FunctionName")
                 );
 
+            SchemaBuilder.CreateTable("VoteWidgetPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("ContentType")
+                    .Column<bool>("Ascending")
+                    .Column<int>("Count")
+                    .Column<string>("Dimension")
+                    .Column<string>("FunctionName")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("VoteWidget",
+                cfg => cfg
+                    .WithPart("VoteWidgetPart")
+                    .WithPart("CommonPart")
+                    .WithPart("WidgetPart")
+                    .WithSetting("Stereotype", "Widget")
+                );
+
             return 2;
         }
 
