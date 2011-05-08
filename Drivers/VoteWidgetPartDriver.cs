@@ -9,8 +9,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.Records;
-using Orchard.Core.Common.Models;
 using Orchard.Data;
 
 namespace Contrib.Voting.Drivers {
@@ -43,7 +41,19 @@ namespace Contrib.Voting.Drivers {
 
             // filter results based on Widget's parameters
             var resultPredicate = PredicateBuilder.True<ResultRecord>();
-            resultPredicate = resultPredicate.And(r => r.FunctionName == part.FunctionName);
+            resultPredicate = resultPredicate.And(r => r.FunctionName == part.FunctionName);    
+
+            // filter on dimension
+            if(String.IsNullOrEmpty(part.Dimension)) {
+                resultPredicate = resultPredicate.And(
+                    r => r.Dimension == null || r.Dimension == String.Empty);
+            }
+            else {
+                resultPredicate = resultPredicate.And(
+                    r => r.Dimension == part.Dimension);                
+            }
+
+            // filter on content type
             if(!String.IsNullOrEmpty(part.ContentType)) {
                 resultPredicate = resultPredicate.And(r => r.ContentType == part.ContentType);
             }
