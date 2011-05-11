@@ -14,6 +14,6 @@ namespace Contrib.Voting.Services {
         void Vote(ContentItem contentItem, string userName, string hostname, double value, string dimension = null);
         void ChangeVote(VoteRecord vote, double value);
 
-        IEnumerable<ResultRecord> GetResults(int contentItemId, string dimension = null, string[] functions = null);
+        ResultRecord GetResult(int contentItemId, string function, string dimension = null);
     }
 }

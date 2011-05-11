@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Web;
 using Contrib.Voting.Events;
 using Contrib.Voting.Functions;
 using Contrib.Voting.Models;
+using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Services;
 
@@ -17,6 +16,8 @@ namespace Contrib.Voting.Services {
         private readonly IFunctionCalculator _calculator;
         private readonly IEnumerable<IFunction> _functions;
         private readonly IVotingEventHandler _eventHandler;
+        private readonly ICacheManager _cacheManager;
+        private readonly ISignals _signals;
 
         public DefaultVotingService(
             IRepository<VoteRecord> voteRepository,
@@ -24,13 +25,17 @@ namespace Contrib.Voting.Services {
             IClock clock,
             IFunctionCalculator calculator,
             IEnumerable<IFunction> functions,
-            IVotingEventHandler eventHandler) {
+            IVotingEventHandler eventHandler,
+            ICacheManager cacheManager,
+            ISignals signals) {
             _voteRepository = voteRepository;
             _resultRepository = resultRepository;
             _clock = clock;
             _calculator = calculator;
             _functions = functions;
             _eventHandler = eventHandler;
+            _cacheManager = cacheManager;
+            _signals = signals;
         }
 
         public VoteRecord Get(int voteId) {
@@ -89,15 +94,23 @@ namespace Contrib.Voting.Services {
             _eventHandler.VoteChanged(vote, previousValue);
         }
 
-        public IEnumerable<ResultRecord> GetResults(int contentItemId, string dimension = null, string[] functions = null) {
+        public ResultRecord GetResult(int contentItemId, string function, string dimension = null) {
+            var key = GetCacheKey(contentItemId, function, dimension);
 
-            foreach (var function in _functions) {
-                var functionName = function.Name;
-                yield return _resultRepository.Get(
-                    r => r.Dimension == dimension
-                         && r.ContentItemRecord.Id == contentItemId
-                         && r.FunctionName == functionName);
-            }
+            return _cacheManager.Get(key, ctx => {
+                
+                // invalidated when a result is recreated on the same contentItem/function/dimension
+                ctx.Monitor(_signals.When(key));
+                return _resultRepository.Get( r => 
+                    r.Dimension == dimension
+                    && r.ContentItemRecord.Id == contentItemId
+                    && r.FunctionName == function);
+                }
+            );
+        }
+
+        public static string GetCacheKey(int contentItemId, string function, string dimension) {
+            return String.Concat("vote_", contentItemId, "_", dimension ?? "");
         }
     }
 }

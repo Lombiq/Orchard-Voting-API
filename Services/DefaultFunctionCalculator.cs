@@ -4,6 +4,7 @@ using System.Threading;
 using Contrib.Voting.Events;
 using Contrib.Voting.Functions;
 using Contrib.Voting.Models;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Logging;
@@ -18,6 +19,7 @@ namespace Contrib.Voting.Services {
         private readonly IClock _clock;
         private readonly ICalculusQueue _queue;
         private readonly IVotingEventHandler _eventHandler;
+        private readonly ISignals _signals;
 
         public DefaultFunctionCalculator(
             IContentManager contentManager,
@@ -26,7 +28,8 @@ namespace Contrib.Voting.Services {
             IRepository<ResultRecord> resultRepository,
             IClock clock,
             ICalculusQueue queue,
-            IVotingEventHandler eventHandler) {
+            IVotingEventHandler eventHandler,
+            ISignals signals) {
             _contentManager = contentManager;
             _functions = functions;
             _voteRepository = voteRepository;
@@ -34,6 +37,7 @@ namespace Contrib.Voting.Services {
             _clock = clock;
             _queue = queue;
             _eventHandler = eventHandler;
+            _signals = signals;
         }
 
         public ILogger Logger { get; set; }
@@ -107,6 +111,9 @@ namespace Contrib.Voting.Services {
                         _resultRepository.Create(result);   
                     }
 
+                    // invalidates the cached result
+                    _signals.Trigger(DefaultVotingService.GetCacheKey(result.ContentItemRecord.Id, result.FunctionName, result.Dimension));
+                    
                     _eventHandler.Calculated(result);
                 }
 
