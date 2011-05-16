@@ -84,9 +84,9 @@ namespace Contrib.Voting.Services {
                             .ToList();
                     };
 
-                    // get the current result for this function and content item
+                    // get the current result for this function, content item and dimension
                     var result = _resultRepository
-                        .Fetch(r => r.ContentItemRecord.Id == currentCalculus.ContentId && r.FunctionName == currentCalculus.FunctionName)
+                        .Fetch(r => r.ContentItemRecord.Id == currentCalculus.ContentId && r.FunctionName == currentCalculus.FunctionName && r.Dimension == currentCalculus.Dimension)
                         .SingleOrDefault();
 
                     var contentItem = _contentManager.Get(currentCalculus.ContentId);
