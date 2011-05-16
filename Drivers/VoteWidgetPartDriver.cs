@@ -36,7 +36,7 @@ namespace Contrib.Voting.Drivers {
             if (part.Ascending){
                 order = x => x.Asc(r => r.Value);
             } else {
-                order = x => x.Asc(r => r.Value);
+                order = x => x.Desc(r => r.Value);
             }
 
             // filter results based on Widget's parameters
