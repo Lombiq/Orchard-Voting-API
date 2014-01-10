@@ -110,10 +110,6 @@ namespace Contrib.Voting.Services {
         }
 
         public static string GetCacheKey(int contentItemId, string function, string dimension) {
-
-            // (wmeints) Important: Include function in the cache key, otherwise
-            // the values for all functions are stored in the same cache item
-            // resulting in an invalid result value returned by the service.
             return String.Concat("vote_", contentItemId, "_", function, "_", dimension ?? "");
         }
     }
