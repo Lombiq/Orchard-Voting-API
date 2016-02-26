@@ -58,7 +58,7 @@ namespace Contrib.Voting.Drivers {
                 resultPredicate = resultPredicate.And(r => r.ContentType == part.ContentType);
             }
 
-            var results = _resultRepository.Fetch(resultPredicate, order, 0, part.Count).Select(r => r.ContentItemRecord.Id);
+            var results = _resultRepository.Fetch(resultPredicate, order, 0, part.Count).Where(x => x.Count > 0).Select(r => r.ContentItemRecord.Id);
 
             // build the Summary display for each content item
             var list = shapeHelper.List();
