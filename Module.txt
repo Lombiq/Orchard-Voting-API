@@ -1,9 +1,9 @@
 Name: Voting
 AntiForgery: enabled
-Author: Sébastien Ros
+Author: Sï¿½bastien Ros
 Website: http://orchardvoting.codeplex.com
 Version: 1.2.1
-OrchardVersion: 1.1
+OrchardVersion: 1.9.1
 Description: Voting is a set of APIs used by other modules to manage votes on content items, calculating different values automatically and efficiently.
 Features:
     Contrib.Voting:
